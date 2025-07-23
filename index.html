@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Games Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🧠 Alzheimer's Games Hub</h1>
+            <p class="subtitle">Brain training games to keep your mind sharp</p>
+        </header>
+
+        <main class="games-grid">
+            <div class="game-card" data-game="memory">
+                <div class="game-icon">🎴</div>
+                <h3>Memory Game</h3>
+                <p>Match pairs of cards to test your memory</p>
+                <div class="stats">
+                    <span class="stat">Best Time: <span id="memory-best-time">--</span></span>
+                    <span class="stat">Best Moves: <span id="memory-best-moves">--</span></span>
+                </div>
+                <a href="memory.html" target="_blank" class="play-btn">Play Now</a>
+            </div>
+
+            <div class="game-card" data-game="sudoku">
+                <div class="game-icon">🔢</div>
+                <h3>Sudoku</h3>
+                <p>Fill the grid with numbers 1-9</p>
+                <div class="stats">
+                    <span class="stat">Best Time: <span id="sudoku-best-time">--</span></span>
+                    <span class="stat">Best Mistakes: <span id="sudoku-best-mistakes">--</span></span>
+                </div>
+                <a href="sudoku.html" target="_blank" class="play-btn">Play Now</a>
+            </div>
+
+            <div class="game-card" data-game="wordsearch">
+                <div class="game-icon">🔍</div>
+                <h3>Word Search</h3>
+                <p>Find hidden words in the grid</p>
+                <div class="stats">
+                    <span class="stat">Best Time: <span id="wordsearch-best-time">--</span></span>
+                    <span class="stat">Best Found: <span id="wordsearch-best-found">--</span></span>
+                </div>
+                <a href="wordsearch.html" target="_blank" class="play-btn">Play Now</a>
+            </div>
+
+            <div class="game-card" data-game="jumble">
+                <div class="game-icon">🔤</div>
+                <h3>Jumble Word</h3>
+                <p>Unscramble the letters to form words</p>
+                <div class="stats">
+                    <span class="stat">Best Time: <span id="jumble-best-time">--</span></span>
+                    <span class="stat">Best Mistakes: <span id="jumble-best-mistakes">--</span></span>
+                </div>
+                <a href="jumble.html" target="_blank" class="play-btn">Play Now</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Designed to help maintain cognitive function and memory</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 

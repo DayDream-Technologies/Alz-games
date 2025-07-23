@@ -1,0 +1,19 @@
+# Ignore the Old folder (all legacy games and assets)
+Old/
+
+# Node modules (if any future use)
+node_modules/
+
+# Mac system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Log files
+*.log 
