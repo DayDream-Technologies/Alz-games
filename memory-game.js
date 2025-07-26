@@ -7,25 +7,84 @@ class MemoryGame {
         this.matchedPairs = 0;
         this.moves = 0;
         this.mistakes = 0;
+        this.attempts = 0;
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
-        
+        this.difficulty = 'easy';
         this.init();
     }
 
     init() {
         this.createGame();
         this.startTimer();
+        this.setupDifficultyDropdown();
+        this.updateStatsDisplay();
+    }
+
+    setupDifficultyDropdown() {
+        const select = document.getElementById('memory-diff-select');
+        const newBtn = document.getElementById('memory-new-game');
+        select.value = this.difficulty;
+        select.addEventListener('change', () => {
+            this.difficulty = select.value;
+        });
+        newBtn.addEventListener('click', () => {
+            this.difficulty = select.value;
+            this.incrementAttempts();
+            this.resetGame();
+        });
+    }
+
+    incrementAttempts() {
+        this.attempts++;
+        // Update stats in localStorage
+        const stats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+        if (!stats.memory) stats.memory = {};
+        stats.memory.attempts = (stats.memory.attempts || 0) + 1;
+        localStorage.setItem('gameStats', JSON.stringify(stats));
+        this.updateStatsDisplay();
+    }
+
+    resetGame() {
+        this.container.innerHTML = '';
+        this.cards = [];
+        this.flippedCards = [];
+        this.matchedPairs = 0;
+        this.moves = 0;
+        this.mistakes = 0;
+        this.startTime = Date.now();
+        this.gameStarted = false;
+        this.gameCompleted = false;
+        this.createGame();
+        this.startTimer();
     }
 
     createGame() {
-        const symbols = ['🎴', '🎲', '🎯', '🎪', '🎨', '🎭', '🎪', '🎨'];
+        let symbols, totalPairs;
+        
+        if (this.difficulty === 'easy') {
+            // Easy: 4 sets of 4 characters (16 cards total)
+            symbols = ['🎴', '🎲', '🎯', '🎪'];
+            totalPairs = 4;
+        } else {
+            // Hard: 8 sets of 2 characters (16 cards total)
+            symbols = ['🎴', '🎲', '🎯', '🎪', '🎨', '🎭', '🎮', '🧩'];
+            totalPairs = 8;
+        }
+        
         const gameCards = [...symbols, ...symbols]; // Duplicate for pairs
         this.shuffleArray(gameCards);
 
         const grid = document.createElement('div');
         grid.className = 'memory-grid';
+        
+        // Adjust grid columns based on difficulty
+        if (this.difficulty === 'easy') {
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        } else {
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        }
 
         gameCards.forEach((symbol, index) => {
             const card = document.createElement('div');
@@ -81,7 +140,8 @@ class MemoryGame {
                 this.matchedPairs++;
                 this.flippedCards = [];
                 
-                if (this.matchedPairs === 8) {
+                const totalPairs = this.difficulty === 'easy' ? 4 : 8;
+                if (this.matchedPairs === totalPairs) {
                     this.completeGame();
                 }
             }, 500);
@@ -111,6 +171,14 @@ class MemoryGame {
     updateStats() {
         document.getElementById('current-moves').textContent = this.moves;
         document.getElementById('current-mistakes').textContent = this.mistakes;
+    }
+
+    updateStatsDisplay() {
+        // Update attempts in the UI
+        const stats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+        const attempts = stats.memory && stats.memory.attempts ? stats.memory.attempts : 0;
+        const el = document.getElementById('memory-attempts');
+        if (el) el.textContent = attempts;
     }
 
     completeGame() {

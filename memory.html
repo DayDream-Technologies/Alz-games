@@ -16,13 +16,23 @@
 
         <div class="game-container">
             <div class="game-header">
-                <a href="index.html" class="back-btn">← Back to Games</a>
+                <a href="games.html" class="back-btn">← Back to Games</a>
                 <h2>Memory Game</h2>
                 <div class="game-stats">
                     <div class="stat-item">Time: <span id="current-time">00:00</span></div>
                     <div class="stat-item">Moves: <span id="current-moves">0</span></div>
                     <div class="stat-item">Mistakes: <span id="current-mistakes">0</span></div>
+                    <div class="stat-item">Attempts: <span id="memory-attempts">0</span></div>
                 </div>
+            </div>
+
+            <div class="memory-difficulty">
+                <label for="memory-diff-select">Difficulty:</label>
+                <select id="memory-diff-select">
+                    <option value="easy" selected>Easy</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <button id="memory-new-game" class="memory-diff-btn">New Game</button>
             </div>
 
             <div class="memory-game">

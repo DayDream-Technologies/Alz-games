@@ -1,4 +1,4 @@
-import { WORDS_4, WORDS_5, WORDS_6 } from './wordlists.js';
+// Word lists are now loaded from wordlists.js as global variables
 
 function getRandomWords(wordList, count, usedSet) {
     const available = wordList.filter(w => !usedSet.has(w));
@@ -12,12 +12,27 @@ function getRandomWords(wordList, count, usedSet) {
     return selected;
 }
 
+// Helper function to check if two words are anagrams
+function areAnagrams(word1, word2) {
+    if (word1.length !== word2.length) return false;
+    const sorted1 = word1.toLowerCase().split('').sort().join('');
+    const sorted2 = word2.toLowerCase().split('').sort().join('');
+    return sorted1 === sorted2;
+}
+
+// Helper function to find all anagrams of a word from a word list
+function findAnagrams(word, wordList) {
+    return wordList.filter(w => areAnagrams(word, w));
+}
+
 class JumbleGame {
     constructor(container, gameManager) {
         this.container = container;
         this.gameManager = gameManager;
         this.usedWords = { easy: new Set(), medium: new Set(), hard: new Set() };
         this.difficulty = 'medium';
+        this.consecutiveMistakes = 0;
+        this.hintButton = null;
         this.init();
     }
 
@@ -70,9 +85,12 @@ class JumbleGame {
     createGame() {
         const { words, count } = this.getWordListAndSettings();
         this.wordList = getRandomWords(words, count, this.usedWords[this.difficulty]);
+        this.fullWordList = words; // Store full word list for anagram checking
         this.currentWordIndex = 0;
         this.moves = 0;
         this.mistakes = 0;
+        this.consecutiveMistakes = 0;
+        this.hintButton = null;
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
@@ -112,10 +130,12 @@ class JumbleGame {
         
         // Hint button
         const hintBtn = document.createElement('button');
-        hintBtn.className = 'jumble-btn';
+        hintBtn.className = 'jumble-btn hint-btn disabled';
         hintBtn.textContent = 'Hint';
+        hintBtn.disabled = true;
         hintBtn.addEventListener('click', () => this.showHint());
         gameDiv.appendChild(hintBtn);
+        this.hintButton = hintBtn;
         
         // Skip button
         const skipBtn = document.createElement('button');
@@ -126,6 +146,9 @@ class JumbleGame {
         
         this.container.appendChild(gameDiv);
         this.input = input;
+        
+        // Initialize the first word
+        this.nextWord();
     }
 
     jumbleWord(word) {
@@ -135,6 +158,16 @@ class JumbleGame {
             [letters[i], letters[j]] = [letters[j], letters[i]];
         }
         return letters.join('');
+    }
+
+    isValidAnagram(answer, targetWord) {
+        // Check if answer is an anagram of the target word
+        if (!areAnagrams(answer, targetWord)) return false;
+        
+        // Check if the answer is a valid word from the word list
+        return this.fullWordList.some(word => 
+            word.toUpperCase() === answer
+        );
     }
 
     checkAnswer() {
@@ -147,7 +180,11 @@ class JumbleGame {
         const answer = this.input.value.trim().toUpperCase();
         this.moves++;
         
-        if (answer === this.currentWord) {
+        // Check if answer is correct (exact match or anagram)
+        const isCorrect = answer === this.currentWord.toUpperCase() || 
+                         this.isValidAnagram(answer, this.currentWord);
+        
+        if (isCorrect) {
             this.correctAnswer();
         } else {
             this.incorrectAnswer();
@@ -159,6 +196,7 @@ class JumbleGame {
     correctAnswer() {
         this.input.value = '';
         this.currentWordIndex++;
+        this.consecutiveMistakes = 0; // Reset consecutive mistakes on correct answer
         
         if (this.currentWordIndex >= this.wordList.length) {
             this.completeGame();
@@ -169,13 +207,29 @@ class JumbleGame {
 
     incorrectAnswer() {
         this.mistakes++;
+        this.consecutiveMistakes++;
         this.input.classList.add('error');
         setTimeout(() => {
             this.input.classList.remove('error');
         }, 1000);
+        
+        // Enable hint button after 2 consecutive mistakes
+        if (this.consecutiveMistakes >= 2 && this.hintButton) {
+            this.hintButton.disabled = false;
+            this.hintButton.classList.remove('disabled');
+        }
     }
 
     showHint() {
+        if (!this.currentWord) {
+            console.error('No current word available for hint');
+            return;
+        }
+        
+        // Add a mistake for using the hint
+        this.mistakes++;
+        this.consecutiveMistakes = 0; // Reset consecutive mistakes after using hint
+        
         const hint = this.currentWord.charAt(0) + '...' + this.currentWord.charAt(this.currentWord.length - 1);
         const hintDiv = document.createElement('div');
         hintDiv.className = 'jumble-hint';
@@ -188,6 +242,14 @@ class JumbleGame {
         }
         
         this.container.appendChild(hintDiv);
+        
+        // Disable hint button after use
+        if (this.hintButton) {
+            this.hintButton.disabled = true;
+            this.hintButton.classList.add('disabled');
+        }
+        
+        this.updateStats();
     }
 
     skipWord() {
@@ -206,6 +268,7 @@ class JumbleGame {
     nextWord() {
         this.currentWord = this.wordList[this.currentWordIndex];
         this.jumbledWord = this.jumbleWord(this.currentWord);
+        this.consecutiveMistakes = 0; // Reset consecutive mistakes for new word
         
         // Update display
         const jumbledDisplay = this.container.querySelector('.jumble-word');
@@ -222,6 +285,12 @@ class JumbleGame {
         const hint = this.container.querySelector('.jumble-hint');
         if (hint) {
             hint.remove();
+        }
+        
+        // Reset hint button state
+        if (this.hintButton) {
+            this.hintButton.disabled = true;
+            this.hintButton.classList.add('disabled');
         }
     }
 

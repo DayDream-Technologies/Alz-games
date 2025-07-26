@@ -8,6 +8,8 @@ class SudokuGame {
         this.moves = 0;
         this.mistakes = 0;
         this.attempts = 0;
+        this.consecutiveMistakes = 0;
+        this.hintButton = null;
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
@@ -65,6 +67,8 @@ class SudokuGame {
         this.selectedCell = null;
         this.moves = 0;
         this.mistakes = 0;
+        this.consecutiveMistakes = 0;
+        this.hintButton = null;
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
@@ -98,11 +102,52 @@ class SudokuGame {
     }
 
     generatePuzzle() {
-        // Use sudoku.js library to generate a new puzzle and its solution
-        const puzzleString = window.sudoku.generate(this.difficulty);
-        const solutionString = window.sudoku.solve(puzzleString);
-        this.grid = window.sudoku.board_string_to_grid(puzzleString).map(row => row.map(c => c === '.' ? 0 : parseInt(c)));
-        this.solution = window.sudoku.board_string_to_grid(solutionString).map(row => row.map(c => parseInt(c)));
+        // Check if sudoku library is loaded
+        if (!window.sudoku) {
+            console.error('Sudoku library not loaded!');
+            // Fallback: create a simple puzzle
+            this.createFallbackPuzzle();
+            return;
+        }
+        
+        try {
+            // Use sudoku.js library to generate a new puzzle and its solution
+            const puzzleString = window.sudoku.generate(this.difficulty);
+            const solutionString = window.sudoku.solve(puzzleString);
+            this.grid = window.sudoku.board_string_to_grid(puzzleString).map(row => row.map(c => c === '.' ? 0 : parseInt(c)));
+            this.solution = window.sudoku.board_string_to_grid(solutionString).map(row => row.map(c => parseInt(c)));
+        } catch (error) {
+            console.error('Error generating puzzle:', error);
+            this.createFallbackPuzzle();
+        }
+    }
+
+    createFallbackPuzzle() {
+        // Create a simple 9x9 grid with some numbers filled in
+        this.grid = [
+            [5,3,0,0,7,0,0,0,0],
+            [6,0,0,1,9,5,0,0,0],
+            [0,9,8,0,0,0,0,6,0],
+            [8,0,0,0,6,0,0,0,3],
+            [4,0,0,8,0,3,0,0,1],
+            [7,0,0,0,2,0,0,0,6],
+            [0,6,0,0,0,0,2,8,0],
+            [0,0,0,4,1,9,0,0,5],
+            [0,0,0,0,8,0,0,7,9]
+        ];
+        
+        // Simple solution (this is a valid sudoku solution)
+        this.solution = [
+            [5,3,4,6,7,8,9,1,2],
+            [6,7,2,1,9,5,3,4,8],
+            [1,9,8,3,4,2,5,6,7],
+            [8,5,9,7,6,1,4,2,3],
+            [4,2,6,8,5,3,7,9,1],
+            [7,1,3,9,2,4,8,5,6],
+            [9,6,1,5,3,7,2,8,4],
+            [2,8,7,4,1,9,6,3,5],
+            [3,4,5,2,8,6,1,7,9]
+        ];
     }
 
 
@@ -201,11 +246,13 @@ class SudokuGame {
             this.selectedCell.removeEventListener('click', () => this.selectCell(this.selectedCell));
             this.selectedCell = null;
             this.moves++;
+            this.consecutiveMistakes = 0; // Reset consecutive mistakes on correct answer
             
             // Check if puzzle is complete
             this.checkCompletion();
         } else {
             this.mistakes++;
+            this.consecutiveMistakes++;
             this.selectedCell.classList.add('error');
             // Use a unique error id for this cell
             const errorCell = this.selectedCell;
@@ -218,6 +265,11 @@ class SudokuGame {
                     delete errorCell.dataset.errorId;
                 }
             }, 1000);
+            
+            // Show hint button after 3 consecutive mistakes
+            if (this.consecutiveMistakes >= 3) {
+                this.showHintButton();
+            }
         }
         
         this.updateStats();
@@ -286,5 +338,62 @@ class SudokuGame {
         const attempts = stats.sudoku && stats.sudoku.attempts ? stats.sudoku.attempts : 0;
         const el = document.getElementById('sudoku-attempts');
         if (el) el.textContent = attempts;
+    }
+
+    showHintButton() {
+        if (this.hintButton) return; // Already shown
+        
+        this.hintButton = document.createElement('button');
+        this.hintButton.className = 'sudoku-btn hint-btn';
+        this.hintButton.textContent = '💡 Hint';
+        this.hintButton.addEventListener('click', () => this.provideHint());
+        
+        // Insert the hint button next to the Clear button in the controls
+        const controls = this.container.querySelector('.sudoku-controls');
+        if (controls) {
+            controls.appendChild(this.hintButton);
+        }
+    }
+
+    provideHint() {
+        if (this.gameCompleted) return;
+        
+        // Find all empty cells
+        const emptyCells = [];
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (cell && !cell.textContent && !cell.classList.contains('fixed')) {
+                    emptyCells.push({ row, col, cell });
+                }
+            }
+        }
+        
+        if (emptyCells.length === 0) return;
+        
+        // Select a random empty cell
+        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        const correctValue = this.solution[randomCell.row][randomCell.col];
+        
+        // Fill in the correct value
+        randomCell.cell.textContent = correctValue;
+        randomCell.cell.classList.add('fixed');
+        randomCell.cell.removeEventListener('click', () => this.selectCell(randomCell.cell));
+        
+        // Update the grid
+        this.grid[randomCell.row][randomCell.col] = correctValue;
+        
+        // Add 2 mistakes for using hint
+        this.mistakes += 2;
+        this.consecutiveMistakes = 0; // Reset consecutive mistakes
+        
+        // Remove hint button
+        if (this.hintButton) {
+            this.hintButton.remove();
+            this.hintButton = null;
+        }
+        
+        this.updateStats();
+        this.checkCompletion();
     }
 } 

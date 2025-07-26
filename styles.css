@@ -332,6 +332,14 @@ body {
     font-weight: 300;
 }
 
+.game-note {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    font-style: italic;
+    margin-top: 5px;
+}
+
 /* Games grid */
 .games-grid {
     display: grid;
@@ -592,6 +600,44 @@ body {
     transform: rotateY(180deg);
 }
 
+.memory-difficulty {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.memory-difficulty label {
+    font-weight: 600;
+    color: #333;
+}
+
+.memory-difficulty select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+}
+
+.memory-diff-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.memory-diff-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 .sudoku-grid {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
@@ -651,6 +697,20 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9rem;
+}
+
+.hint-btn {
+    background: #ffc107;
+    color: #333;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.hint-btn:hover {
+    background: #ffb300;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
 }
 
 .sudoku-difficulty {
@@ -802,6 +862,18 @@ body {
 
 .jumble-btn:hover {
     background: #5a6fd8;
+}
+
+.jumble-btn.hint-btn.disabled {
+    background: #6c757d;
+    color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.jumble-btn.hint-btn.disabled:hover {
+    background: #6c757d;
+    transform: none;
 }
 
 .jumble-hint {

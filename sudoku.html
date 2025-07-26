@@ -16,7 +16,7 @@
 
         <div class="game-container">
             <div class="game-header">
-                <a href="index.html" class="back-btn">← Back to Games</a>
+                <a href="games.html" class="back-btn">← Back to Games</a>
                 <h2>Sudoku</h2>
                 <div class="game-stats">
                     <div class="stat-item">Time: <span id="current-time">00:00</span></div>
@@ -44,11 +44,18 @@
         </div>
     </div>
 
-    <script src="Old/sudoku.js-master/sudoku.js-master/sudoku.js"></script>
+    <script src="sudoku.js"></script>
     <script src="sudoku-game.js"></script>
     <script>
         // Initialize the sudoku game
         document.addEventListener('DOMContentLoaded', () => {
+            // Check if sudoku library loaded properly
+            if (!window.sudoku) {
+                console.error('Sudoku library failed to load!');
+                alert('Error: Sudoku library could not be loaded. Please refresh the page.');
+                return;
+            }
+            
             const container = document.querySelector('.sudoku-game');
             const gameManager = {
                 formatTime: (seconds) => {

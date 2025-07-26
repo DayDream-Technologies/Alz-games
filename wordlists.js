@@ -1,5 +1,5 @@
 // Word lists for Easy (4), Medium (5), Hard (6) difficulties
-export const WORDS_4 = [
+const WORDS_4 = [
     "able", "also", "area", "army", "away", "baby", "back", "ball", "band", "bank", "base", "bath", "bear", "beat", "been",
     "beer", "bell", "belt", "best", "bill", "bird", "blow", "blue", "boat", "body", "bomb", "bond", "bone", "book", "boom",
     "born", "boss", "both", "bowl", "bulk", "burn", "bush", "busy", "call", "calm", "came", "camp", "card", "care", "case",
@@ -35,7 +35,7 @@ export const WORDS_4 = [
     "wish", "with", "wood", "word", "wore", "work", "yard", "yeah", "year", "your", "zero", "zone"
 ];
 
-export const WORDS_5 = [
+const WORDS_5 = [
     "about", "above", "abuse", "actor", "acute", "admit", "adopt", "adult", "after", "again",
     "agent", "agree", "ahead", "alarm", "album", "alert", "alike", "alive", "allow", "alone",
     "along", "alter", "among", "anger", "angle", "angry", "apart", "apple", "apply", "arena",
@@ -90,7 +90,7 @@ export const WORDS_5 = [
     "wound", "write", "wrong", "wrote", "yield", "young", "youth"
 ];
 
-export const WORDS_6 = [
+const WORDS_6 = [
     "abroad", "accept", "access", "accord", "accuse", "across", "acting", "action", "active", "actual",
     "admire", "advice", "advise", "afford", "afraid", "agency", "agenda", "almost", "always", "amount",
     "animal", "annual", "answer", "anyone", "appeal", "appear", "artist", "aspect", "assign", "assist",
@@ -134,4 +134,9 @@ export const WORDS_6 = [
     "versus", "victim", "vision", "visual", "voting", "waited", "walker", "wander", "wanted", "warmer",
     "wealth", "weekly", "weight", "window", "winner", "winter", "within", "wonder", "worker", "writer",
     "yellow"
-]; 
+];
+
+// Make variables globally available
+window.WORDS_4 = WORDS_4;
+window.WORDS_5 = WORDS_5;
+window.WORDS_6 = WORDS_6; 

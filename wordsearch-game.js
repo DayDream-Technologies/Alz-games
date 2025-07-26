@@ -1,4 +1,4 @@
-import { WORDS_4, WORDS_5, WORDS_6 } from './wordlists.js';
+// Word lists are now loaded from wordlists.js as global variables
 
 // Helper to shuffle and avoid repeats
 function getRandomWords(wordList, count, usedSet) {
@@ -86,11 +86,14 @@ class WordSearchGame {
     }
 
     generatePuzzle() {
-        // Define words to hide
-        this.words = ['BRAIN', 'MEMORY', 'PUZZLE', 'LOGIC', 'THINK', 'FOCUS', 'LEARN', 'MIND'];
+        // Use the word lists from wordlists.js based on difficulty
+        const { words, count, size } = this.getWordListAndSettings();
+        this.words = getRandomWords(words, count, this.usedWords[this.difficulty]).map(word => word.toUpperCase());
         this.foundWords = [];
-        // Always clear the grid before placing words
-        this.grid = Array(15).fill().map(() => Array(15).fill(''));
+        
+        // Clear the grid before placing words
+        this.grid = Array(size).fill().map(() => Array(size).fill(''));
+        
         // Place words in the grid
         this.placeWords();
         // Fill remaining spaces with random letters
@@ -110,8 +113,8 @@ class WordSearchGame {
             let placed = false;
             let attempts = 0;
             while (!placed && attempts < 200) { // Increase attempts for robustness
-                const row = Math.floor(Math.random() * 15);
-                const col = Math.floor(Math.random() * 15);
+                const row = Math.floor(Math.random() * this.gridSize);
+                const col = Math.floor(Math.random() * this.gridSize);
                 const direction = directions[Math.floor(Math.random() * directions.length)];
                 if (this.canPlaceWord(word, row, col, direction)) {
                     this.placeWord(word, row, col, direction);
@@ -135,7 +138,7 @@ class WordSearchGame {
             const row = startRow + i * dRow;
             const col = startCol + i * dCol;
             
-            if (row < 0 || row >= 15 || col < 0 || col >= 15) {
+            if (row < 0 || row >= this.gridSize || col < 0 || col >= this.gridSize) {
                 return false;
             }
             
@@ -160,8 +163,8 @@ class WordSearchGame {
     fillRemainingSpaces() {
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         
-        for (let row = 0; row < 15; row++) {
-            for (let col = 0; col < 15; col++) {
+        for (let row = 0; row < this.gridSize; row++) {
+            for (let col = 0; col < this.gridSize; col++) {
                 if (this.grid[row][col] === '') {
                     this.grid[row][col] = letters[Math.floor(Math.random() * letters.length)];
                 }
@@ -178,14 +181,15 @@ class WordSearchGame {
         grid.style.userSelect = 'none';
         grid.style.webkitUserSelect = 'none';
         grid.style.msUserSelect = 'none';
+        grid.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
         
         // Track selection start
         this.selectionStart = null;
         this.selectionDirection = null;
         this.isSelecting = false;
 
-        for (let row = 0; row < 15; row++) {
-            for (let col = 0; col < 15; col++) {
+        for (let row = 0; row < this.gridSize; row++) {
+            for (let col = 0; col < this.gridSize; col++) {
                 const cell = document.createElement('div');
                 cell.className = 'wordsearch-cell';
                 cell.textContent = this.grid[row][col];
@@ -213,8 +217,8 @@ class WordSearchGame {
         this.words.forEach(word => {
             const wordItem = document.createElement('div');
             wordItem.className = 'word-item';
-            wordItem.textContent = word;
-            wordItem.dataset.word = word;
+            wordItem.textContent = word.toUpperCase();
+            wordItem.dataset.word = word.toUpperCase();
             wordList.appendChild(wordItem);
         });
         
