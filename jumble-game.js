@@ -137,12 +137,12 @@ class JumbleGame {
         gameDiv.appendChild(hintBtn);
         this.hintButton = hintBtn;
         
-        // Skip button
-        const skipBtn = document.createElement('button');
-        skipBtn.className = 'jumble-btn';
-        skipBtn.textContent = 'Skip';
-        skipBtn.addEventListener('click', () => this.skipWord());
-        gameDiv.appendChild(skipBtn);
+        // Skip button - removed to prevent skipping
+        // const skipBtn = document.createElement('button');
+        // skipBtn.className = 'jumble-btn';
+        // skipBtn.textContent = 'Skip';
+        // skipBtn.addEventListener('click', () => this.skipWord());
+        // gameDiv.appendChild(skipBtn);
         
         this.container.appendChild(gameDiv);
         this.input = input;

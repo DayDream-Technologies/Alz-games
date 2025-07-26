@@ -42,7 +42,7 @@ const WORDS_5 = [
     "argue", "arise", "array", "aside", "asset", "audio", "audit", "avoid", "award", "aware",
     "badly", "baker", "bases", "basic", "basis", "beach", "began", "begin", "being", "below",
     "bench", "billy", "birth", "black", "blame", "blind", "block", "blood", "boost", "booth",
-    "bound", "brain", "brand", "bread", "break", "breed", "brief", "bring", "broad", "broke",
+    "bound", "brain", "brake", "brand", "bread", "break", "breed", "brief", "bring", "broad", "broke",
     "brown", "build", "built", "buyer", "cable", "calif", "carry", "catch", "cause", "chain",
     "chair", "chart", "chase", "cheap", "check", "chest", "chief", "child", "china", "chose",
     "civil", "claim", "class", "clean", "clear", "click", "clock", "close", "coach", "coast",
