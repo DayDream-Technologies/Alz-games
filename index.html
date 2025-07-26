@@ -3,68 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alzheimer's Games Hub</title>
+    <title>Brain Health Hub - Strengthen Your Brain</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1 class="title">🧠 Alzheimer's Games Hub</h1>
-            <p class="subtitle">Brain training games to keep your mind sharp</p>
-        </header>
-
-        <main class="games-grid">
-            <div class="game-card" data-game="memory">
-                <div class="game-icon">🎴</div>
-                <h3>Memory Game</h3>
-                <p>Match pairs of cards to test your memory</p>
-                <div class="stats">
-                    <span class="stat">Best Time: <span id="memory-best-time">--</span></span>
-                    <span class="stat">Best Moves: <span id="memory-best-moves">--</span></span>
+    <div class="landing-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">🧠 Strengthen Your Brain</h1>
+                <p class="hero-subtitle">Smart cognitive training to keep your mind sharp and independent for longer</p>
+                <div class="hero-buttons">
+                    <a href="games.html" class="cta-button">Play Games</a>
+                    <a href="#how-it-works" class="secondary-button">Learn More</a>
                 </div>
-                <a href="memory.html" target="_blank" class="play-btn">Play Now</a>
             </div>
+            <div class="hero-visual">
+                <div class="brain-icon">🧠</div>
+            </div>
+        </section>
 
-            <div class="game-card" data-game="sudoku">
-                <div class="game-icon">🔢</div>
-                <h3>Sudoku</h3>
-                <p>Fill the grid with numbers 1-9</p>
-                <div class="stats">
-                    <span class="stat">Best Time: <span id="sudoku-best-time">--</span></span>
-                    <span class="stat">Best Mistakes: <span id="sudoku-best-mistakes">--</span></span>
+        <!-- Why Prevention Matters -->
+        <section class="info-section" id="why-prevention">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">🛡️</div>
+                    <h2>Why Prevention Matters</h2>
+                    <p>There's no cure for dementia, but decades of research show that lifestyle changes can delay or even prevent symptoms. We are here to make that easy and available for everyone.</p>
                 </div>
-                <a href="sudoku.html" target="_blank" class="play-btn">Play Now</a>
             </div>
+        </section>
 
-            <div class="game-card" data-game="wordsearch">
-                <div class="game-icon">🔍</div>
-                <h3>Word Search</h3>
-                <p>Find hidden words in the grid</p>
-                <div class="stats">
-                    <span class="stat">Best Time: <span id="wordsearch-best-time">--</span></span>
-                    <span class="stat">Best Found: <span id="wordsearch-best-found">--</span></span>
+        <!-- How It Works -->
+        <section class="info-section" id="how-it-works">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">🔗</div>
+                    <h2>How It Works</h2>
+                    <p>We connect with apps you already use, such as Apple Fitness, NYT Games, Duolingo, and more, to track brain-boosting activities and introduce you to a whole suite of new neuroprotective activities within our app. Then we calculate a Brain Health Score based on what science says protects your mind.</p>
                 </div>
-                <a href="wordsearch.html" target="_blank" class="play-btn">Play Now</a>
             </div>
+        </section>
 
-            <div class="game-card" data-game="jumble">
-                <div class="game-icon">🔤</div>
-                <h3>Jumble Word</h3>
-                <p>Unscramble the letters to form words</p>
-                <div class="stats">
-                    <span class="stat">Best Time: <span id="jumble-best-time">--</span></span>
-                    <span class="stat">Best Mistakes: <span id="jumble-best-mistakes">--</span></span>
+        <!-- Cognitive Training -->
+        <section class="info-section" id="cognitive-training">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <h2>Cognitive Training Included</h2>
+                    <p>Utilizing built-in brain games and puzzle tools, such as speed-based Sudoku and memory challenges. You can track your performance and improvement over time.</p>
+                    <div class="games-preview">
+                        <div class="game-preview-item">
+                            <span class="game-icon">🎴</span>
+                            <span>Memory Game</span>
+                        </div>
+                        <div class="game-preview-item">
+                            <span class="game-icon">🔢</span>
+                            <span>Sudoku</span>
+                        </div>
+                        <div class="game-preview-item">
+                            <span class="game-icon">🔍</span>
+                            <span>Word Search</span>
+                        </div>
+                        <div class="game-preview-item">
+                            <span class="game-icon">🔤</span>
+                            <span>Jumble Word</span>
+                        </div>
+                    </div>
                 </div>
-                <a href="jumble.html" target="_blank" class="play-btn">Play Now</a>
             </div>
-        </main>
+        </section>
 
-        <footer class="footer">
-            <p>Designed to help maintain cognitive function and memory</p>
+        <!-- Backed by Research -->
+        <section class="info-section" id="backed-by-research">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">📊</div>
+                    <h2>Backed by Research</h2>
+                    <p>Our algorithms are built on evidence from neuroscience, cognitive aging, and dementia prevention studies. We adjust your Brain Health Score using real cognitive test results over time to ensure its accuracy.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- For You and Your Family -->
+        <section class="info-section" id="for-family">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">👨‍👩‍👧‍👦</div>
+                    <h2>For You and Your Family</h2>
+                    <p>Family and caregivers can check in too. See how much a loved one is doing to protect their brain, and get peace of mind that they're on the right track.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Personalized & Evolving -->
+        <section class="info-section" id="personalized">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <h2>Personalized & Evolving</h2>
+                    <p>The more you use the app, the smarter it gets. We use your demographics, lifestyle, and health background to provide you with recommendations that actually matter for your brain.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Strengthen Your Brain?</h2>
+                <p>Start with our cognitive training games and track your progress over time.</p>
+                <a href="games.html" class="cta-button large">Start Playing Now</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="container">
+                <p>Designed to help maintain cognitive function and memory for everyone, especially older adults.</p>
+            </div>
         </footer>
     </div>
-
-    <script src="app.js"></script>
 </body>
 </html> 
