@@ -153,11 +153,125 @@ class JumbleGame {
 
     jumbleWord(word) {
         const letters = word.split('');
-        for (let i = letters.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [letters[i], letters[j]] = [letters[j], letters[i]];
+        let jumbledWord;
+        let attempts = 0;
+        const maxAttempts = 100; // Prevent infinite loops
+        
+        do {
+            // Use different shuffling techniques for better randomization
+            if (attempts % 3 === 0) {
+                // Fisher-Yates shuffle
+                for (let i = letters.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [letters[i], letters[j]] = [letters[j], letters[i]];
+                }
+            } else if (attempts % 3 === 1) {
+                // Reverse and shuffle
+                letters.reverse();
+                for (let i = 0; i < letters.length - 1; i++) {
+                    const j = i + Math.floor(Math.random() * (letters.length - i));
+                    [letters[i], letters[j]] = [letters[j], letters[i]];
+                }
+            } else {
+                // Random swaps
+                for (let i = 0; i < letters.length * 2; i++) {
+                    const idx1 = Math.floor(Math.random() * letters.length);
+                    const idx2 = Math.floor(Math.random() * letters.length);
+                    [letters[idx1], letters[idx2]] = [letters[idx2], letters[idx1]];
+                }
+            }
+            
+            jumbledWord = letters.join('');
+            attempts++;
+            
+            // If we've tried too many times, use a fallback method
+            if (attempts >= maxAttempts) {
+                console.warn(`Could not find a valid jumble for "${word}" after ${maxAttempts} attempts, using fallback`);
+                jumbledWord = this.fallbackJumble(word);
+                break;
+            }
+        } while (this.isInvalidJumble(jumbledWord, word));
+        
+        return jumbledWord;
+    }
+
+    fallbackJumble(word) {
+        // Fallback method: systematically rearrange letters to avoid the original
+        const letters = word.split('');
+        const length = letters.length;
+        
+        // For even-length words, swap halves
+        if (length % 2 === 0) {
+            const mid = length / 2;
+            for (let i = 0; i < mid; i++) {
+                [letters[i], letters[mid + i]] = [letters[mid + i], letters[i]];
+            }
+        } else {
+            // For odd-length words, rotate by half length
+            const rotations = Math.floor(length / 2);
+            for (let r = 0; r < rotations; r++) {
+                const temp = letters.pop();
+                letters.unshift(temp);
+            }
         }
+        
         return letters.join('');
+    }
+
+    isInvalidJumble(jumbledWord, originalWord) {
+        // Check if jumbled word is the same as original
+        if (jumbledWord.toUpperCase() === originalWord.toUpperCase()) {
+            return true;
+        }
+        
+        // Check if jumbled word is a valid anagram that could be the answer
+        if (this.isValidAnagram(jumbledWord, originalWord)) {
+            return true;
+        }
+        
+        // Check if jumbled word spells any other valid word from the word list
+        // that could be confused with the answer
+        if (this.fullWordList.some(word => 
+            word.toUpperCase() === jumbledWord.toUpperCase()
+        )) {
+            return true;
+        }
+        
+        // Check for common prefixes/suffixes that might give away the answer
+        const commonPrefixes = ['RE', 'UN', 'IN', 'IM', 'DIS', 'MIS', 'PRE', 'PRO'];
+        const commonSuffixes = ['ING', 'ED', 'ER', 'EST', 'LY', 'FUL', 'LESS', 'NESS'];
+        
+        // Check if jumbled word starts with a common prefix that the original word has
+        for (const prefix of commonPrefixes) {
+            if (originalWord.toUpperCase().startsWith(prefix) && 
+                jumbledWord.toUpperCase().startsWith(prefix)) {
+                return true;
+            }
+        }
+        
+        // Check if jumbled word ends with a common suffix that the original word has
+        for (const suffix of commonSuffixes) {
+            if (originalWord.toUpperCase().endsWith(suffix) && 
+                jumbledWord.toUpperCase().endsWith(suffix)) {
+                return true;
+            }
+        }
+        
+        // Check if jumbled word contains the first 2 or last 2 letters of the original word
+        // in the same position (this could be too revealing)
+        const original = originalWord.toUpperCase();
+        const jumbled = jumbledWord.toUpperCase();
+        
+        if (original.length >= 2) {
+            const firstTwo = original.substring(0, 2);
+            const lastTwo = original.substring(original.length - 2);
+            
+            if (jumbled.startsWith(firstTwo) || jumbled.endsWith(lastTwo)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     isValidAnagram(answer, targetWord) {
@@ -213,8 +327,8 @@ class JumbleGame {
             this.input.classList.remove('error');
         }, 1000);
         
-        // Enable hint button after 2 consecutive mistakes
-        if (this.consecutiveMistakes >= 2 && this.hintButton) {
+        // Enable hint button after 1 consecutive mistake
+        if (this.consecutiveMistakes >= 1 && this.hintButton) {
             this.hintButton.disabled = false;
             this.hintButton.classList.remove('disabled');
         }

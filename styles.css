@@ -11,6 +11,280 @@ body {
     color: #333;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Animated Background Elements */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Floating Particles */
+.floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float-particle 15s infinite linear;
+}
+
+.particle-1 {
+    width: 4px;
+    height: 4px;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 20s;
+}
+
+.particle-2 {
+    width: 6px;
+    height: 6px;
+    left: 20%;
+    animation-delay: 2s;
+    animation-duration: 18s;
+}
+
+.particle-3 {
+    width: 3px;
+    height: 3px;
+    left: 30%;
+    animation-delay: 4s;
+    animation-duration: 22s;
+}
+
+.particle-4 {
+    width: 5px;
+    height: 5px;
+    left: 40%;
+    animation-delay: 6s;
+    animation-duration: 16s;
+}
+
+.particle-5 {
+    width: 4px;
+    height: 4px;
+    left: 50%;
+    animation-delay: 8s;
+    animation-duration: 19s;
+}
+
+.particle-6 {
+    width: 6px;
+    height: 6px;
+    left: 60%;
+    animation-delay: 10s;
+    animation-duration: 21s;
+}
+
+.particle-7 {
+    width: 3px;
+    height: 3px;
+    left: 70%;
+    animation-delay: 12s;
+    animation-duration: 17s;
+}
+
+.particle-8 {
+    width: 5px;
+    height: 5px;
+    left: 80%;
+    animation-delay: 14s;
+    animation-duration: 23s;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Geometric Shapes */
+.geometric-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: rotate-shape 30s infinite linear;
+}
+
+.shape-1 {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    border-radius: 50%;
+    top: 15%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    transform: rotate(45deg);
+    top: 25%;
+    right: 20%;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    border-radius: 10px;
+    bottom: 30%;
+    left: 10%;
+    animation-delay: 10s;
+}
+
+.shape-4 {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(45deg, #feca57, #ff9ff3);
+    transform: rotate(30deg);
+    bottom: 20%;
+    right: 15%;
+    animation-delay: 15s;
+}
+
+@keyframes rotate-shape {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Wave Effects */
+.wave-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+}
+
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50% 50% 0 0;
+    animation: wave-move 8s infinite ease-in-out;
+}
+
+.wave-1 {
+    animation-delay: 0s;
+    height: 80px;
+}
+
+.wave-2 {
+    animation-delay: 2s;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.wave-3 {
+    animation-delay: 4s;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+@keyframes wave-move {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+/* Brain Connections */
+.brain-connections {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.connection {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    height: 1px;
+    animation: pulse-connection 4s infinite ease-in-out;
+}
+
+.connection-1 {
+    width: 200px;
+    top: 20%;
+    left: 10%;
+    transform: rotate(45deg);
+    animation-delay: 0s;
+}
+
+.connection-2 {
+    width: 150px;
+    top: 40%;
+    right: 20%;
+    transform: rotate(-30deg);
+    animation-delay: 1s;
+}
+
+.connection-3 {
+    width: 180px;
+    bottom: 40%;
+    left: 30%;
+    transform: rotate(60deg);
+    animation-delay: 2s;
+}
+
+.connection-4 {
+    width: 120px;
+    bottom: 30%;
+    right: 10%;
+    transform: rotate(-45deg);
+    animation-delay: 3s;
+}
+
+@keyframes pulse-connection {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scaleX(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scaleX(1.2);
+    }
 }
 
 .container {
@@ -20,12 +294,16 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
 }
 
 /* Landing Page Styles */
 .landing-container {
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    z-index: 1;
 }
 
 /* Hero Section */
@@ -262,6 +540,36 @@ body {
     .brain-icon {
         font-size: 6rem;
     }
+
+    /* Mobile optimizations for animated background */
+    .particle {
+        animation-duration: 25s;
+    }
+    
+    .shape {
+        opacity: 0.05;
+        animation-duration: 40s;
+    }
+    
+    .wave {
+        height: 60px;
+    }
+    
+    .wave-1 {
+        height: 50px;
+    }
+    
+    .wave-2 {
+        height: 40px;
+    }
+    
+    .wave-3 {
+        height: 30px;
+    }
+    
+    .connection {
+        opacity: 0.2;
+    }
 }
 
 @media (max-width: 480px) {
@@ -284,6 +592,51 @@ body {
     
     .games-preview {
         grid-template-columns: 1fr;
+    }
+
+    /* Further mobile optimizations */
+    .particle {
+        animation-duration: 30s;
+    }
+    
+    .shape {
+        opacity: 0.03;
+        animation-duration: 50s;
+    }
+    
+    .wave {
+        height: 40px;
+    }
+    
+    .wave-1 {
+        height: 35px;
+    }
+    
+    .wave-2 {
+        height: 25px;
+    }
+    
+    .wave-3 {
+        height: 20px;
+    }
+    
+    .connection {
+        opacity: 0.15;
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .particle,
+    .shape,
+    .wave,
+    .connection,
+    .brain-icon {
+        animation: none;
+    }
+    
+    .animated-background {
+        display: none;
     }
 }
 
