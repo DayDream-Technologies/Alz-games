@@ -14,6 +14,8 @@ class SudokuGame {
         this.gameStarted = false;
         this.gameCompleted = false;
         this.difficulty = 'medium';
+        this.notesMode = false;
+        this.notes = {}; // Store notes for each cell: { "row-col": [1,2,3] }
         this.init();
     }
 
@@ -53,9 +55,15 @@ class SudokuGame {
             if (!this.selectedCell || this.gameCompleted) return;
             if (this.selectedCell.classList.contains('fixed')) return;
             if (e.key >= '1' && e.key <= '9') {
-                this.placeNumber(parseInt(e.key));
+                if (this.notesMode) {
+                    this.toggleNote(parseInt(e.key));
+                } else {
+                    this.placeNumber(parseInt(e.key));
+                }
             } else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
                 this.clearCell();
+            } else if (e.key === 'n' || e.key === 'N') {
+                this.toggleNotesMode();
             }
         });
     }
@@ -72,6 +80,8 @@ class SudokuGame {
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
+        this.notesMode = false;
+        this.notes = {};
         this.createGame();
         this.startTimer();
     }
@@ -204,6 +214,9 @@ class SudokuGame {
         
         this.selectedCell = cell;
         cell.classList.add('selected');
+        
+        // Update cell display to show notes if any
+        this.updateCellDisplay();
     }
 
     createControls() {
@@ -215,7 +228,13 @@ class SudokuGame {
             const btn = document.createElement('button');
             btn.className = 'sudoku-btn';
             btn.textContent = i;
-            btn.addEventListener('click', () => this.placeNumber(i));
+            btn.addEventListener('click', () => {
+                if (this.notesMode) {
+                    this.toggleNote(i);
+                } else {
+                    this.placeNumber(i);
+                }
+            });
             controls.appendChild(btn);
         }
         
@@ -225,6 +244,13 @@ class SudokuGame {
         clearBtn.textContent = 'Clear';
         clearBtn.addEventListener('click', () => this.clearCell());
         controls.appendChild(clearBtn);
+        
+        // Notes mode toggle button
+        const notesBtn = document.createElement('button');
+        notesBtn.className = 'sudoku-btn notes-btn';
+        notesBtn.textContent = '📝 Notes';
+        notesBtn.addEventListener('click', () => this.toggleNotesMode());
+        controls.appendChild(notesBtn);
         
         this.container.appendChild(controls);
     }
@@ -244,6 +270,11 @@ class SudokuGame {
             this.selectedCell.classList.remove('selected');
             this.selectedCell.classList.add('fixed');
             this.selectedCell.removeEventListener('click', () => this.selectCell(this.selectedCell));
+            
+            // Clear notes for this cell
+            const noteKey = `${row}-${col}`;
+            delete this.notes[noteKey];
+            
             this.selectedCell = null;
             this.moves++;
             this.consecutiveMistakes = 0; // Reset consecutive mistakes on correct answer
@@ -278,9 +309,108 @@ class SudokuGame {
     clearCell() {
         if (!this.selectedCell || this.gameCompleted) return;
         
+        const row = parseInt(this.selectedCell.dataset.row);
+        const col = parseInt(this.selectedCell.dataset.col);
+        const noteKey = `${row}-${col}`;
+        
+        // Clear notes for this cell
+        delete this.notes[noteKey];
+        
         this.selectedCell.textContent = '';
         this.selectedCell.classList.remove('selected');
         this.selectedCell = null;
+    }
+
+    toggleNotesMode() {
+        this.notesMode = !this.notesMode;
+        const notesBtn = this.container.querySelector('.notes-btn');
+        if (notesBtn) {
+            if (this.notesMode) {
+                notesBtn.classList.add('active');
+                notesBtn.textContent = '📝 Notes (ON)';
+            } else {
+                notesBtn.classList.remove('active');
+                notesBtn.textContent = '📝 Notes';
+            }
+        }
+    }
+
+    toggleNote(number) {
+        if (!this.selectedCell || this.gameCompleted) return;
+        if (this.selectedCell.classList.contains('fixed')) return;
+        
+        const row = parseInt(this.selectedCell.dataset.row);
+        const col = parseInt(this.selectedCell.dataset.col);
+        const noteKey = `${row}-${col}`;
+        
+        if (!this.notes[noteKey]) {
+            this.notes[noteKey] = [];
+        }
+        
+        const noteIndex = this.notes[noteKey].indexOf(number);
+        if (noteIndex > -1) {
+            // Remove note if it exists
+            this.notes[noteKey].splice(noteIndex, 1);
+        } else {
+            // Add note if it doesn't exist
+            this.notes[noteKey].push(number);
+        }
+        
+        this.updateCellDisplay();
+    }
+
+    updateCellDisplay() {
+        if (!this.selectedCell) return;
+        
+        const row = parseInt(this.selectedCell.dataset.row);
+        const col = parseInt(this.selectedCell.dataset.col);
+        const noteKey = `${row}-${col}`;
+        
+        // Clear the cell content
+        this.selectedCell.innerHTML = '';
+        
+        // If there are notes, display them
+        if (this.notes[noteKey] && this.notes[noteKey].length > 0) {
+            const notesContainer = document.createElement('div');
+            notesContainer.className = 'sudoku-notes';
+            
+            // Create a 3x3 grid for notes
+            for (let i = 1; i <= 9; i++) {
+                const noteSpan = document.createElement('span');
+                noteSpan.className = 'note-number';
+                if (this.notes[noteKey].includes(i)) {
+                    noteSpan.textContent = i;
+                    noteSpan.classList.add('active');
+                }
+                notesContainer.appendChild(noteSpan);
+            }
+            
+            this.selectedCell.appendChild(notesContainer);
+        }
+    }
+
+    displayNotesForCell(cell) {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const noteKey = `${row}-${col}`;
+        
+        if (this.notes[noteKey] && this.notes[noteKey].length > 0) {
+            cell.innerHTML = '';
+            const notesContainer = document.createElement('div');
+            notesContainer.className = 'sudoku-notes';
+            
+            for (let i = 1; i <= 9; i++) {
+                const noteSpan = document.createElement('span');
+                noteSpan.className = 'note-number';
+                if (this.notes[noteKey].includes(i)) {
+                    noteSpan.textContent = i;
+                    noteSpan.classList.add('active');
+                }
+                notesContainer.appendChild(noteSpan);
+            }
+            
+            cell.appendChild(notesContainer);
+        }
     }
 
     checkCompletion() {

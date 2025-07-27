@@ -1409,6 +1409,71 @@ body {
     border-color: #667eea;
 }
 
+/* Notes functionality styles */
+.sudoku-btn.notes-btn {
+    background: #28a745;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sudoku-btn.notes-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.sudoku-btn.notes-btn.active {
+    background: #dc3545;
+    animation: pulse 1s infinite;
+}
+
+.sudoku-btn.notes-btn.active:hover {
+    background: #c82333;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.sudoku-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    font-size: 0.6rem;
+    font-weight: 400;
+}
+
+.note-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 0.5rem;
+    opacity: 0.3;
+}
+
+.note-number.active {
+    color: #667eea;
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* Make notes white when cell is selected */
+.sudoku-cell.selected .note-number {
+    color: white;
+    opacity: 0.7;
+}
+
+.sudoku-cell.selected .note-number.active {
+    color: white;
+    opacity: 1;
+    font-weight: 600;
+}
+
 .wordsearch-container {
     max-width: 600px;
     margin: 0 auto;

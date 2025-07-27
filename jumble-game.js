@@ -33,6 +33,7 @@ class JumbleGame {
         this.difficulty = 'medium';
         this.consecutiveMistakes = 0;
         this.hintButton = null;
+        this.revealedLetters = []; // Track revealed letters for current word
         this.init();
     }
 
@@ -91,6 +92,7 @@ class JumbleGame {
         this.mistakes = 0;
         this.consecutiveMistakes = 0;
         this.hintButton = null;
+        this.revealedLetters = []; // Reset revealed letters for new game
         this.startTime = Date.now();
         this.gameStarted = false;
         this.gameCompleted = false;
@@ -130,9 +132,8 @@ class JumbleGame {
         
         // Hint button
         const hintBtn = document.createElement('button');
-        hintBtn.className = 'jumble-btn hint-btn disabled';
+        hintBtn.className = 'jumble-btn hint-btn';
         hintBtn.textContent = 'Hint';
-        hintBtn.disabled = true;
         hintBtn.addEventListener('click', () => this.showHint());
         gameDiv.appendChild(hintBtn);
         this.hintButton = hintBtn;
@@ -326,12 +327,6 @@ class JumbleGame {
         setTimeout(() => {
             this.input.classList.remove('error');
         }, 1000);
-        
-        // Enable hint button after 1 consecutive mistake
-        if (this.consecutiveMistakes >= 1 && this.hintButton) {
-            this.hintButton.disabled = false;
-            this.hintButton.classList.remove('disabled');
-        }
     }
 
     showHint() {
@@ -344,10 +339,36 @@ class JumbleGame {
         this.mistakes++;
         this.consecutiveMistakes = 0; // Reset consecutive mistakes after using hint
         
-        const hint = this.currentWord.charAt(0) + '...' + this.currentWord.charAt(this.currentWord.length - 1);
-        const hintDiv = document.createElement('div');
-        hintDiv.className = 'jumble-hint';
-        hintDiv.textContent = `Hint: ${hint}`;
+        // Find available positions (not yet revealed)
+        const availablePositions = [];
+        for (let i = 0; i < this.currentWord.length; i++) {
+            if (!this.revealedLetters.includes(i)) {
+                availablePositions.push(i);
+            }
+        }
+        
+        // If all letters are revealed, don't show another hint
+        if (availablePositions.length === 0) {
+            return;
+        }
+        
+        // Pick a random position to reveal
+        const randomIndex = Math.floor(Math.random() * availablePositions.length);
+        const positionToReveal = availablePositions[randomIndex];
+        const letterToReveal = this.currentWord.charAt(positionToReveal);
+        
+        // Add to revealed letters
+        this.revealedLetters.push(positionToReveal);
+        
+        // Create hint display
+        let hintDisplay = '';
+        for (let i = 0; i < this.currentWord.length; i++) {
+            if (this.revealedLetters.includes(i)) {
+                hintDisplay += this.currentWord.charAt(i);
+            } else {
+                hintDisplay += '_';
+            }
+        }
         
         // Remove previous hint if exists
         const prevHint = this.container.querySelector('.jumble-hint');
@@ -355,13 +376,11 @@ class JumbleGame {
             prevHint.remove();
         }
         
+        // Create new hint display
+        const hintDiv = document.createElement('div');
+        hintDiv.className = 'jumble-hint';
+        hintDiv.textContent = `Hint: ${hintDisplay}`;
         this.container.appendChild(hintDiv);
-        
-        // Disable hint button after use
-        if (this.hintButton) {
-            this.hintButton.disabled = true;
-            this.hintButton.classList.add('disabled');
-        }
         
         this.updateStats();
     }
@@ -383,6 +402,7 @@ class JumbleGame {
         this.currentWord = this.wordList[this.currentWordIndex];
         this.jumbledWord = this.jumbleWord(this.currentWord);
         this.consecutiveMistakes = 0; // Reset consecutive mistakes for new word
+        this.revealedLetters = []; // Reset revealed letters for new word
         
         // Update display
         const jumbledDisplay = this.container.querySelector('.jumble-word');
@@ -399,12 +419,6 @@ class JumbleGame {
         const hint = this.container.querySelector('.jumble-hint');
         if (hint) {
             hint.remove();
-        }
-        
-        // Reset hint button state
-        if (this.hintButton) {
-            this.hintButton.disabled = true;
-            this.hintButton.classList.add('disabled');
         }
     }
 

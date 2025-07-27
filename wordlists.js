@@ -26,7 +26,7 @@ const WORDS_4 = [
     "root", "rope", "rose", "rule", "rush", "safe", "said", "sake", "sale", "salt", "same", "sand", "save", "seat", "seed",
     "seek", "seem", "seen", "self", "sell", "send", "sent", "sept", "seth", "sexy", "ship", "shop", "shot", "show", "shut",
     "sick", "side", "sign", "site", "size", "skin", "slip", "slow", "snow", "soap", "soft", "soil", "sold", "sole", "some",
-    "song", "soon", "sort", "soul", "spot", "star", "stay", "step", "stop", "store", "storm", "story", "strip", "suit",
+    "song", "soon", "sort", "soul", "spot", "star", "stay", "step", "stop", "suit",
     "sure", "take", "tale", "talk", "tall", "tank", "tape", "task", "team", "tech", "tell", "tend", "term", "test", "text",
     "than", "that", "them", "then", "they", "thin", "this", "thus", "tied", "time", "tiny", "told", "tone", "tool", "tour",
     "town", "trap", "tree", "trip", "true", "tune", "turn", "type", "unit", "upon", "urge", "used", "user", "uses", "vain",
