@@ -44,7 +44,7 @@ const WORDS_5 = [
     "bench", "billy", "birth", "black", "blame", "blind", "block", "blood", "boost", "booth",
     "bound", "brain", "brake", "brand", "bread", "break", "breed", "brief", "bring", "broad", "broke",
     "brown", "build", "built", "buyer", "cable", "calif", "carry", "catch", "cause", "chain",
-    "chair", "chart", "chase", "cheap", "check", "chest", "chief", "child", "china", "chose",
+    "chair", "charm", "chart", "chase", "cheap", "check", "chest", "chief", "child", "china", "chose",
     "civil", "claim", "class", "clean", "clear", "click", "clock", "close", "coach", "coast",
     "could", "count", "court", "cover", "craft", "crash", "cream", "crime", "cross", "crowd",
     "crown", "crude", "carry", "curly", "curry", "curse", "curve", "cycle", "daily", "dance",
