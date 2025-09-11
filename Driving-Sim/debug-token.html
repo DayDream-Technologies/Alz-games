@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Debug - Driving Simulator</title>
+    
+    <!-- Load Mapbox GL JS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,6 +64,7 @@
         <h3>Actions</h3>
         <button onclick="reloadScript()">Reload Script</button>
         <button onclick="testTokenInjection()">Test Token Injection</button>
+        <button onclick="analyzeTokenFromScript()">Check Script File</button>
         <button onclick="clearConsole()">Clear Console</button>
     </div>
     
@@ -92,15 +98,20 @@
 
         function analyzeToken() {
             const tokenStatus = document.getElementById('tokenStatus');
+            let statusHtml = '';
             
             // Check if mapboxgl is loaded
             if (typeof mapboxgl === 'undefined') {
-                tokenStatus.innerHTML = '<div class="error">❌ Mapbox GL JS not loaded</div>';
+                statusHtml = '<div class="error">❌ Mapbox GL JS not loaded yet</div>';
+                statusHtml += '<p>Waiting for Mapbox GL JS to load...</p>';
+                tokenStatus.innerHTML = statusHtml;
+                
+                // Try again after a short delay
+                setTimeout(analyzeToken, 1000);
                 return;
             }
             
             const token = mapboxgl.accessToken;
-            let statusHtml = '';
             
             if (!token || token === '') {
                 statusHtml = '<div class="error">❌ Token is empty or undefined</div>';
@@ -120,6 +131,44 @@ Token starts with pk.: ${token ? token.startsWith('pk.') : false}
             `;
             
             tokenStatus.innerHTML = statusHtml;
+        }
+
+        function analyzeTokenFromScript() {
+            const tokenStatus = document.getElementById('tokenStatus');
+            
+            fetch('script.js')
+                .then(response => response.text())
+                .then(content => {
+                    // Extract token from script content
+                    const tokenMatch = content.match(/mapboxgl\.accessToken\s*=\s*['"`]([^'"`]*)['"`]/);
+                    const token = tokenMatch ? tokenMatch[1] : null;
+                    
+                    let statusHtml = '<h4>Token from Script File:</h4>';
+                    
+                    if (!token || token === '') {
+                        statusHtml += '<div class="error">❌ Token is empty in script file</div>';
+                    } else if (token.startsWith('pk.')) {
+                        statusHtml += '<div class="success">✅ Token appears to be valid in script file</div>';
+                    } else {
+                        statusHtml += '<div class="warning">⚠️ Token does not start with pk. in script file</div>';
+                    }
+                    
+                    statusHtml += `
+                        <pre>
+Token from script: "${token}"
+Token length: ${token ? token.length : 0}
+Token starts with pk.: ${token ? token.startsWith('pk.') : false}
+                        </pre>
+                    `;
+                    
+                    // Add to existing status
+                    const currentStatus = tokenStatus.innerHTML;
+                    tokenStatus.innerHTML = currentStatus + statusHtml;
+                })
+                .catch(error => {
+                    const currentStatus = tokenStatus.innerHTML;
+                    tokenStatus.innerHTML = currentStatus + `<div class="error">❌ Error reading script file: ${error.message}</div>`;
+                });
         }
 
         function analyzeScript() {
@@ -185,6 +234,7 @@ Token starts with pk.: ${token ? token.startsWith('pk.') : false}
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Token debug page loaded');
             analyzeToken();
+            analyzeTokenFromScript();
             analyzeScript();
         });
     </script>

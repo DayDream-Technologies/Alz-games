@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Token Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 300px;
+        }
+        pre {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Local Token Injection Test</h1>
+    
+    <div class="test-section">
+        <h3>Test Token Injection</h3>
+        <p>Enter a test Mapbox token to verify the injection logic works:</p>
+        <input type="text" id="testToken" placeholder="pk.your_test_token_here" />
+        <button onclick="testInjection()">Test Injection</button>
+        <div id="injectionResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Current Script Analysis</h3>
+        <button onclick="analyzeCurrentScript()">Analyze Current Script</button>
+        <div id="currentScriptResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Script with Injected Token</h3>
+        <button onclick="loadTestScript()">Load Test Script</button>
+        <div id="testScriptResult"></div>
+    </div>
+
+    <script>
+        function testInjection() {
+            const testToken = document.getElementById('testToken').value;
+            const resultDiv = document.getElementById('injectionResult');
+            
+            if (!testToken) {
+                resultDiv.innerHTML = '<div class="error">Please enter a test token</div>';
+                return;
+            }
+            
+            // Simulate the injection process
+            const originalContent = `mapboxgl.accessToken = '';`;
+            const injectedContent = `mapboxgl.accessToken = '${testToken}';`;
+            
+            resultDiv.innerHTML = `
+                <div class="success">✅ Injection test completed</div>
+                <pre>
+Original: ${originalContent}
+Injected: ${injectedContent}
+Token length: ${testToken.length}
+Token starts with pk.: ${testToken.startsWith('pk.')}
+                </pre>
+            `;
+        }
+        
+        function analyzeCurrentScript() {
+            const resultDiv = document.getElementById('currentScriptResult');
+            
+            fetch('script.js')
+                .then(response => response.text())
+                .then(content => {
+                    const lines = content.split('\n');
+                    const tokenLine = lines.find(line => line.includes('mapboxgl.accessToken'));
+                    const debugLines = lines.filter(line => line.includes('MAPBOX TOKEN DEBUG'));
+                    
+                    resultDiv.innerHTML = `
+                        <pre>
+Token line: ${tokenLine || 'Not found'}
+Debug lines: ${debugLines.length}
+Total lines: ${lines.length}
+First 5 lines:
+${lines.slice(0, 5).join('\n')}
+                        </pre>
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                });
+        }
+        
+        function loadTestScript() {
+            const resultDiv = document.getElementById('testScriptResult');
+            
+            // Create a script element to load the test script
+            const script = document.createElement('script');
+            script.src = 'test-script.js';
+            script.onload = () => {
+                if (typeof testMapboxConnection === 'function') {
+                    const success = testMapboxConnection();
+                    resultDiv.innerHTML = `
+                        <div class="${success ? 'success' : 'error'}">
+                            ${success ? '✅' : '❌'} Test script loaded and function executed
+                        </div>
+                        <pre>Check console for detailed output</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Test function not found</div>';
+                }
+            };
+            script.onerror = () => {
+                resultDiv.innerHTML = '<div class="error">❌ Failed to load test script</div>';
+            };
+            
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>
