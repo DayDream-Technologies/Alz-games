@@ -1,0 +1,388 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.header h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    position: relative;
+    z-index: 1;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.input-group input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    background: rgba(255,255,255,0.9);
+}
+
+.input-group input:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+/* Mapbox Geocoder styling */
+.mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+.mapboxgl-ctrl-geocoder input {
+    background: rgba(255,255,255,0.9) !important;
+    border: none !important;
+    border-radius: 5px !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem !important;
+}
+
+.mapboxgl-ctrl-geocoder input:focus {
+    background: white !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3) !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions {
+    background: white !important;
+    border-radius: 5px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    z-index: 10000 !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions-wrapper {
+    z-index: 10000 !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions .suggestion {
+    z-index: 10000 !important;
+}
+
+/* Ensure suggestions dropdown is above everything */
+.mapboxgl-ctrl-geocoder .suggestions {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+/* Make sure the second input group has lower z-index */
+.input-group:nth-child(2) {
+    z-index: 1 !important;
+}
+
+/* Make sure the first input group has higher z-index when active */
+.input-group:first-child .mapboxgl-ctrl-geocoder .suggestions {
+    z-index: 9999 !important;
+}
+
+/* Ensure suggestions from the first input appear above the second input */
+.input-group:first-child {
+    z-index: 10 !important;
+}
+
+.input-group:first-child .mapboxgl-ctrl-geocoder {
+    z-index: 10 !important;
+}
+
+/* Style individual suggestion items */
+.mapboxgl-ctrl-geocoder .suggestions .suggestion {
+    padding: 10px 15px !important;
+    border-bottom: 1px solid #eee !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions .suggestion:hover {
+    background-color: #f5f5f5 !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions .suggestion:last-child {
+    border-bottom: none !important;
+}
+
+/* Right-justify search icon */
+.mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
+    right: 8px !important;
+    left: auto !important;
+}
+
+.mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon-search {
+    right: 8px !important;
+    left: auto !important;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: end;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.status-bar {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.timer {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.map-container {
+    flex: 1;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.success-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.success-content h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.success-content p {
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.success-time {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 1rem 0;
+}
+
+.instructions {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255,255,255,0.95);
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 300px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.instructions h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.instructions li {
+    margin-bottom: 0.25rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.instructions li:before {
+    content: "•";
+    color: #667eea;
+    position: absolute;
+    left: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .input-group {
+        min-width: 100%;
+    }
+    
+    .button-group {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .instructions {
+        position: relative;
+        margin: 1rem;
+        max-width: none;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        gap: 0.25rem;
+        text-align: center;
+    }
+}
+
+/* Custom map markers */
+.user-marker {
+    width: 24px;
+    height: 24px;
+    background: #4CAF50;
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    animation: pulse 2s infinite;
+    position: relative;
+}
+
+.user-marker::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+.destination-marker {
+    width: 30px;
+    height: 30px;
+    background: #f44336;
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.destination-marker::after {
+    content: '🏁';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}

@@ -1,0 +1,44 @@
+name: Deploy Driving Simulator to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'Driving-Sim/**' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Inject Mapbox Token
+        run: |
+          # Create a temporary script file with the token injected
+          sed "s/mapboxgl\.accessToken = '';/mapboxgl\.accessToken = '${{ secrets.MAPBOX_ACCESS_TOKEN }}';/g" Driving-Sim/script.js > Driving-Sim/script-with-token.js
+          mv Driving-Sim/script-with-token.js Driving-Sim/script.js
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Driving-Sim
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
