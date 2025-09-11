@@ -52,22 +52,35 @@ jobs:
           head -10 Driving-Sim/script.js
           echo "=============================="
           
-          # Use a more robust approach with Node.js
-          node -e "
-            const fs = require('fs');
-            const token = process.env.MAPBOX_ACCESS_TOKEN;
-            console.log('Token from env:', token ? token.substring(0, 10) + '...' : 'undefined');
-            
-            let content = fs.readFileSync('Driving-Sim/script.js', 'utf8');
-            console.log('Before replacement - token line:', content.split('\n').find(line => line.includes('mapboxgl.accessToken')));
-            
-            content = content.replace(/mapboxgl\.accessToken = '';/, \`mapboxgl.accessToken = '\${token}';\`);
-            
-            console.log('After replacement - token line:', content.split('\n').find(line => line.includes('mapboxgl.accessToken')));
-            
-            fs.writeFileSync('Driving-Sim/script.js', content);
-            console.log('Token injection completed');
-          "
+          # Create a temporary Node.js script for token injection
+          cat > inject-token.js << 'EOF'
+          const fs = require('fs');
+          const token = process.env.MAPBOX_ACCESS_TOKEN;
+          
+          console.log('Token from env:', token ? token.substring(0, 10) + '...' : 'undefined');
+          
+          let content = fs.readFileSync('Driving-Sim/script.js', 'utf8');
+          console.log('Before replacement - token line:', content.split('\n').find(line => line.includes('mapboxgl.accessToken')));
+          
+          // Replace the empty token with the actual token
+          content = content.replace(/mapboxgl\.accessToken = '';/, `mapboxgl.accessToken = '${token}';`);
+          
+          console.log('After replacement - token line:', content.split('\n').find(line => line.includes('mapboxgl.accessToken')));
+          
+          fs.writeFileSync('Driving-Sim/script.js', content);
+          console.log('Token injection completed');
+          EOF
+          
+          # Run the injection script
+          if ! node inject-token.js; then
+            echo "Node.js injection failed, trying sed fallback..."
+            # Fallback to sed
+            sed -i "s/mapboxgl\.accessToken = '';/mapboxgl.accessToken = '$MAPBOX_ACCESS_TOKEN';/g" Driving-Sim/script.js
+            echo "Sed fallback completed"
+          fi
+          
+          # Clean up
+          rm -f inject-token.js
           
           echo "=== VERIFICATION ==="
           echo "Updated script.js content (first 10 lines):"
