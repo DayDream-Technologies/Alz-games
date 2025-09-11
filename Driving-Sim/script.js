@@ -1,6 +1,16 @@
 // Mapbox access token - Will be injected by GitHub Actions from secrets
 mapboxgl.accessToken = '';
 
+// Debug: Log token status
+console.log('=== MAPBOX TOKEN DEBUG ===');
+console.log('Token value:', mapboxgl.accessToken);
+console.log('Token length:', mapboxgl.accessToken ? mapboxgl.accessToken.length : 0);
+console.log('Token starts with pk.:', mapboxgl.accessToken ? mapboxgl.accessToken.startsWith('pk.') : false);
+console.log('Token is empty string:', mapboxgl.accessToken === '');
+console.log('Token is undefined:', mapboxgl.accessToken === undefined);
+console.log('Token is null:', mapboxgl.accessToken === null);
+console.log('========================');
+
 // Global variables
 let map;
 let userMarker;
@@ -19,6 +29,9 @@ function init() {
     // Check if Mapbox token is set
     if (!mapboxgl.accessToken || mapboxgl.accessToken === '') {
         console.error('Mapbox access token is not set. Please configure MAPBOX_ACCESS_TOKEN secret in GitHub repository settings.');
+        console.error('Current token value:', mapboxgl.accessToken);
+        console.error('Token type:', typeof mapboxgl.accessToken);
+        
         document.body.innerHTML = `
             <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
                 <div style="text-align: center; padding: 2rem; border: 2px solid #ff6b6b; border-radius: 10px; background: #ffe0e0;">
@@ -26,6 +39,13 @@ function init() {
                     <p>Mapbox access token is not configured.</p>
                     <p>Please add your Mapbox access token as a GitHub secret named <code>MAPBOX_ACCESS_TOKEN</code>.</p>
                     <p><a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets" target="_blank">Learn how to add secrets</a></p>
+                    <hr style="margin: 1rem 0;">
+                    <p style="font-size: 0.9rem; color: #666;">
+                        <strong>Debug Info:</strong><br>
+                        Token value: "${mapboxgl.accessToken}"<br>
+                        Token length: ${mapboxgl.accessToken ? mapboxgl.accessToken.length : 0}<br>
+                        Check browser console for more details
+                    </p>
                 </div>
             </div>
         `;
