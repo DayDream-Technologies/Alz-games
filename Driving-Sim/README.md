@@ -22,19 +22,32 @@ A browser-based driving simulation website that allows users to manually navigat
 3. Create a new access token or use the default public token
 4. Copy your access token
 
-### 2. Update the Access Token
+### 2. Set up GitHub Secret (for deployment)
 
-Open `index.html` and replace the placeholder token on line 95:
+For automatic deployment with GitHub Actions:
+
+1. Go to your GitHub repository settings
+2. Navigate to **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `MAPBOX_ACCESS_TOKEN`
+5. Value: Your Mapbox access token (starts with `pk.`)
+6. Click **Add secret**
+
+The GitHub Actions workflow will automatically inject this token during deployment.
+
+### 3. Local Development
+
+For local development, you can temporarily replace the empty token in `script.js`:
 
 ```javascript
-// Replace this line:
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2aWR0ZXN0IiwiYSI6ImNsdGJ6dGJ6dDAwMDAwMmlwZ2J6dGJ6dDAifQ.example';
+// Replace this line in script.js:
+mapboxgl.accessToken = '';
 
 // With your actual token:
 mapboxgl.accessToken = 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE';
 ```
 
-### 3. Run the Application
+### 4. Run the Application
 
 Simply open `index.html` in your web browser. No server setup required!
 
