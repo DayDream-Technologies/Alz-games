@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="crosswordpuzzlegenerator.css">
+  </head>
+  <body>
+    <main>
+      <h3>Crossword Puzzle Generator</h3>
+      <h5>
+      </h5>
+      <div id="startButton"> 
+      	<button class="button" type="button" onclick="createCrossWordPuzzle()">Generate Crossword Puzzle</button>
+        <div id="controls" style="text-align:center; margin-top:10px;">
+  <button class="button" onclick="checkAnswers()">Check Answers</button>
+  <button class="button" onclick="revealSolution()">Reveal Solution</button>
+</div>
+
+      </div>
+	  <div id="grid" class="grid"></div>
+    <div id="hints" style="text-align:center; margin-top:20px;">
+  <h4>Hints:</h4>
+  <ul id="clueList" style="list-style-type:none; padding:0;"></ul>
+</div>
+
+    </main>   
+   <script src="words.js"></script>
+   <script src="word.js"></script>
+   <script src="crosswordpuzzle.js"></script>
+   <script src="crosswordpuzzlegenerator.js"></script>
+  </body>
+</html>
