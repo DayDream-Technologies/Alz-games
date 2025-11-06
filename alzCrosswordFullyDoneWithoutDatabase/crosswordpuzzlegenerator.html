@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cognitive Crossword</title>
+    <link rel="stylesheet" href="crosswordpuzzlegenerator.css" />
+  </head>
+
+  <body>
+    <main>
+      <h3>Cognitive Crossword</h3>
+      <div id="countdown" aria-live="polite"></div>
+      
+      <!-- Cognitive Health Metrics -->
+      <div id="cognitiveMetrics" class="cognitive-metrics">
+        <div class="metric-item">
+          <span class="metric-label">Memory Streak:</span>
+          <span id="exerciseDay" class="metric-value">Day 1</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Letters Revealed:</span>
+          <span id="lettersRevealed" class="metric-value">0</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Words Revealed:</span>
+          <span id="wordsRevealed" class="metric-value">0</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Solve Time:</span>
+          <span id="solveTime" class="metric-value">00:00</span>
+        </div>
+      </div>
+
+      <!-- Crossword Controls -->
+      <div id="controls" style="text-align:center; margin-top:10px;">
+        <button class="button" id="btnCheckLetter">Check Letter</button>
+        <button class="button" id="btnCheckWord">Check Word</button>
+        <button class="button" id="btnRevealLetter">Reveal Letter</button>
+        <button class="button" id="btnRevealWord">Reveal Word</button>
+        <button class="button" id="btnRevealPuzzle">Reveal Puzzle</button>
+      </div>
+
+      <!-- Crossword Grid -->
+      <div id="grid" class="grid"></div>
+
+      <!-- Hints Section -->
+      <div id="hints" style="text-align:center; margin-top:20px;">
+        <h4>Hints:</h4>
+        <ul id="clueList" style="list-style-type:none; padding:0;"></ul>
+      </div>
+    </main>
+
+    <!-- Custom Dialog Box -->
+    <div id="customDialog" class="dialog-overlay" style="display: none;">
+      <div class="dialog-box">
+        <div class="dialog-header">
+          <h3 id="dialogTitle">Message</h3>
+        </div>
+        <div class="dialog-content">
+          <p id="dialogMessage">This is a message.</p>
+        </div>
+        <div class="dialog-footer">
+          <button id="dialogOk" class="dialog-button dialog-button-primary">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="words.js?v=4"></script>
+    <script src="word.js?v=4"></script>
+    <script src="crosswordpuzzle.js?v=4"></script>
+    <script src="crosswordpuzzlegenerator.js?v=4"></script>
+
+  </body>
+</html>
